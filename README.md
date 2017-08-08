@@ -1,6 +1,6 @@
 # Tiny Macros
 
-A Zendesk editor app to quickly search through users, organizations etc and add info to the current ticket comment.
+Tiny Macros is an editor app that will allow you to easily search, edit, and apply information pulled from Zendesk.
 
 ## Getting Started
 
