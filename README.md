@@ -6,6 +6,17 @@ A Zendesk editor app to quickly search through users, organizations etc and add 
 
 Install Zendesk Apps Tools on your development machine: https://developer.zendesk.com/apps/docs/apps-v2/getting_started#zendesk-app-tools
 
+Make sure you have yarn installed:
+```
+$ npm install -g yarn
+```
+
+Install dependencies
+
+```
+$ yarn install
+```
+
 In your first shell start the ZAT Server
 
 ```
