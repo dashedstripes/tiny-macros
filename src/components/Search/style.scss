@@ -1,0 +1,40 @@
+.search-outer {
+  width: 100%;
+  height: 40px;
+  padding: 5px;
+  position: relative;
+  background: #F3F0EE;
+}
+
+.search {
+  width: 89%;
+  height: 100%;
+  border: 0px;
+  padding: 5px;
+  padding-left: 30px;
+  border-radius: 3px;
+}
+
+.search-icon {
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  top: 50%;
+  left: 10px;
+  transform: translateY(-50%);
+  background-color: #DDDDDD;
+  -webkit-mask-image: url('/icons/search.svg');
+  mask-image: url('/icons/search.svg');
+}
+
+.service-switch {
+  width: 10%;
+  height: 100%;
+  float: right;
+}
+
+select {
+  border: 0px;
+  background: #ffffff;
+  border-radius: 3px;
+}
