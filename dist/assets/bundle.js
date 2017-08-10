@@ -25178,7 +25178,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var store = (0, _redux.createStore)(_reducers2.default, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
 
 store.subscribe(function () {
-  // console.log(store.getState())
+  console.log(store.getState());
 });
 
 module.exports = store;
@@ -25196,57 +25196,25 @@ Object.defineProperty(exports, "__esModule", {
 
 var _redux = __webpack_require__(54);
 
-var _todos = __webpack_require__(230);
+var _search = __webpack_require__(245);
 
-var _todos2 = _interopRequireDefault(_todos);
+var _search2 = _interopRequireDefault(_search);
+
+var _fields = __webpack_require__(247);
+
+var _fields2 = _interopRequireDefault(_fields);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var rootReducer = (0, _redux.combineReducers)({
-  todos: _todos2.default
+  search: _search2.default,
+  fields: _fields2.default
 });
 
 exports.default = rootReducer;
 
 /***/ }),
-/* 230 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-var todos = function todos() {
-  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
-  var action = arguments[1];
-
-  switch (action.type) {
-    case 'SET_TODOS':
-      return Object.assign([], action.payload);
-    case 'ADD_TODO':
-      return Object.assign([], state).concat(action.payload);
-    case 'EDIT_TODO':
-      return Object.assign([], state).map(function (val) {
-        if (val.id == action.payload.id) {
-          val.action = action.payload.action;
-        }
-        return val;
-      });
-    case 'DELETE_TODO':
-      return Object.assign([], state).filter(function (val) {
-        if (val.id !== action.id) {
-          return val;
-        }
-      });
-  }
-  return state;
-};
-
-exports.default = todos;
-
-/***/ }),
+/* 230 */,
 /* 231 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -25262,6 +25230,10 @@ var _createClass = function () { function defineProperties(target, props) { for 
 var _react = __webpack_require__(14);
 
 var _react2 = _interopRequireDefault(_react);
+
+var _reactRedux = __webpack_require__(200);
+
+var _fields = __webpack_require__(246);
 
 var _Results = __webpack_require__(232);
 
@@ -25284,10 +25256,24 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var App = function (_Component) {
   _inherits(App, _Component);
 
-  function App() {
+  function App(props) {
     _classCallCheck(this, App);
 
-    return _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).apply(this, arguments));
+    var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
+
+    client.get('ticket').then(function (ticket) {
+      _this.props.dispatch((0, _fields.setTicket)(ticket.ticket));
+      return client.request('/api/v2/users/' + ticket.ticket.requester.id);
+    }, function (err) {
+      console.log(err);
+    }).then(function (user) {
+      _this.props.dispatch((0, _fields.setUser)(user.user));
+      _this.props.dispatch((0, _fields.setUserFields)(user.user.user_fields));
+    }, function (err) {
+      console.log(err);
+    });
+
+    return _this;
   }
 
   _createClass(App, [{
@@ -25305,7 +25291,11 @@ var App = function (_Component) {
   return App;
 }(_react.Component);
 
-exports.default = App;
+function mapStateToProps(state) {
+  return state;
+}
+
+exports.default = (0, _reactRedux.connect)(mapStateToProps)(App);
 
 /***/ }),
 /* 232 */
@@ -25323,6 +25313,8 @@ var _createClass = function () { function defineProperties(target, props) { for 
 var _react = __webpack_require__(14);
 
 var _react2 = _interopRequireDefault(_react);
+
+var _reactRedux = __webpack_require__(200);
 
 var _Result = __webpack_require__(233);
 
@@ -25350,25 +25342,32 @@ var Results = function (_Component) {
   _createClass(Results, [{
     key: 'render',
     value: function render() {
-      return _react2.default.createElement(
-        'div',
-        { className: 'results' },
-        _react2.default.createElement(_Result2.default, null),
-        _react2.default.createElement(_Result2.default, null),
-        _react2.default.createElement(_Result2.default, null),
-        _react2.default.createElement(_Result2.default, null),
-        _react2.default.createElement(_Result2.default, null),
-        _react2.default.createElement(_Result2.default, null),
-        _react2.default.createElement(_Result2.default, null),
-        _react2.default.createElement(_Result2.default, null)
-      );
+      if (this.props.search.results !== undefined) {
+        return _react2.default.createElement(
+          'div',
+          { className: 'results' },
+          this.props.search.results.map(function (result) {
+            return _react2.default.createElement(_Result2.default, { type: result.key, content: result.value });
+          })
+        );
+      } else {
+        return _react2.default.createElement(
+          'div',
+          { className: 'results' },
+          'No results found.'
+        );
+      }
     }
   }]);
 
   return Results;
 }(_react.Component);
 
-exports.default = Results;
+function mapStateToProps(state) {
+  return state;
+}
+
+exports.default = (0, _reactRedux.connect)(mapStateToProps)(Results);
 
 /***/ }),
 /* 233 */
@@ -25425,12 +25424,12 @@ var Result = function (_Component) {
             _react2.default.createElement(
               'h4',
               { className: 'type' },
-              'ADDRESS'
+              this.props.type.toUpperCase().substring(0, 10)
             ),
             _react2.default.createElement(
               'p',
               { className: 'content' },
-              '123 Eastbourne Terrace'
+              this.props.content
             ),
             _react2.default.createElement('button', { className: 'edit' }),
             _react2.default.createElement('button', { className: 'star' })
@@ -25447,12 +25446,12 @@ var Result = function (_Component) {
             _react2.default.createElement(
               'h4',
               { className: 'type' },
-              'ADDRESS'
+              this.props.type
             ),
             _react2.default.createElement(
               'p',
               { className: 'content' },
-              '123 Eastbourne Terrace'
+              this.props.content
             ),
             _react2.default.createElement('button', { className: 'edit' }),
             _react2.default.createElement('button', { className: 'star' })
@@ -25508,7 +25507,7 @@ exports = module.exports = __webpack_require__(33)(undefined);
 
 
 // module
-exports.push([module.i, ".result-container {\n  margin-bottom: 5px; }\n  .result-container:last-of-type {\n    margin-bottom: 0px; }\n\n.result {\n  display: flex;\n  flex-direction: row;\n  justify-content: space-between;\n  width: 100%;\n  padding: 10px;\n  color: #03363D;\n  background: #FFFFFF;\n  transition: 0.25s;\n  border-radius: 3px; }\n  .result:hover {\n    color: #ffffff;\n    background: #03363D; }\n  .result:hover .icon {\n    background-color: #ffffff; }\n  .result .icon {\n    width: 35px;\n    height: 35px;\n    background-color: #03363D;\n    -webkit-mask-image: url(\"/icons/user.svg\");\n    mask-image: url(\"/icons/user.svg\"); }\n  .result .type, .result .content, .result .edit, .result .star {\n    display: inline-block; }\n  .result .type, .result .content {\n    top: 50%;\n    transform: translateY(25%); }\n  .result .edit, .result .star {\n    top: 50%;\n    transform: translateY(10%); }\n  .result .content {\n    width: 100px;\n    white-space: nowrap;\n    overflow: hidden;\n    text-overflow: ellipsis; }\n  .result .edit, .result .star {\n    width: 30px;\n    height: 30px;\n    background: none;\n    border: 0;\n    background-color: #819A9E;\n    transition: 0.5s; }\n    .result .edit:hover, .result .star:hover {\n      background-color: #FFFFFF; }\n  .result .star:hover {\n    background-color: #EFC93D; }\n  .result .edit {\n    -webkit-mask-image: url(\"/icons/edit.svg\");\n    mask-image: url(\"/icons/edit.svg\"); }\n  .result .star {\n    -webkit-mask-image: url(\"/icons/star.svg\");\n    mask-image: url(\"/icons/star.svg\"); }\n\n.result-edit {\n  width: 100%;\n  border: 0px;\n  margin-top: 5px;\n  margin-bottom: 40px;\n  padding: 10px;\n  border-radius: 3px; }\n", ""]);
+exports.push([module.i, ".result-container {\n  margin-bottom: 5px; }\n  .result-container:last-of-type {\n    margin-bottom: 0px; }\n\n.result {\n  display: flex;\n  flex-direction: row;\n  justify-content: space-between;\n  width: 100%;\n  padding: 10px;\n  color: #03363D;\n  background: #FFFFFF;\n  transition: 0.25s;\n  border-radius: 3px;\n  cursor: pointer; }\n  .result:hover {\n    color: #ffffff;\n    background: #03363D; }\n  .result:hover .icon {\n    background-color: #ffffff; }\n  .result .icon {\n    width: 35px;\n    height: 35px;\n    background-color: #03363D;\n    -webkit-mask-image: url(\"/icons/user.svg\");\n    mask-image: url(\"/icons/user.svg\"); }\n  .result .type, .result .content, .result .edit, .result .star {\n    display: inline-block; }\n  .result .type, .result .content {\n    top: 50%;\n    transform: translateY(25%); }\n  .result .edit, .result .star {\n    top: 50%;\n    transform: translateY(10%); }\n  .result .content {\n    width: 100px;\n    white-space: nowrap;\n    overflow: hidden;\n    text-overflow: ellipsis; }\n  .result .edit, .result .star {\n    width: 30px;\n    height: 30px;\n    background: none;\n    border: 0;\n    background-color: #819A9E;\n    transition: 0.5s; }\n    .result .edit:hover, .result .star:hover {\n      background-color: #FFFFFF; }\n  .result .star:hover {\n    background-color: #EFC93D; }\n  .result .edit {\n    -webkit-mask-image: url(\"/icons/edit.svg\");\n    mask-image: url(\"/icons/edit.svg\"); }\n  .result .star {\n    -webkit-mask-image: url(\"/icons/star.svg\");\n    mask-image: url(\"/icons/star.svg\"); }\n\n.result-edit {\n  width: 100%;\n  border: 0px;\n  margin-top: 5px;\n  margin-bottom: 40px;\n  padding: 10px;\n  border-radius: 3px; }\n", ""]);
 
 // exports
 
@@ -25670,6 +25669,10 @@ var _react = __webpack_require__(14);
 
 var _react2 = _interopRequireDefault(_react);
 
+var _reactRedux = __webpack_require__(200);
+
+var _search = __webpack_require__(244);
+
 __webpack_require__(240);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -25690,13 +25693,32 @@ var Search = function (_Component) {
   }
 
   _createClass(Search, [{
+    key: 'handleChange',
+    value: function handleChange(e) {
+      this.props.dispatch((0, _search.setSearchInput)(e.target.value));
+
+      var results = [];
+
+      for (var key in this.props.fields.userFields) {
+        if (key.fuzzy(this.props.search.input)) {
+          results.push({
+            type: 'USER_FIELD',
+            key: key,
+            value: this.props.fields.userFields[key]
+          });
+        }
+      }
+
+      this.props.dispatch((0, _search.setResults)(results));
+    }
+  }, {
     key: 'render',
     value: function render() {
       return _react2.default.createElement(
         'div',
         { className: 'search-outer' },
         _react2.default.createElement('span', { className: 'search-icon' }),
-        _react2.default.createElement('input', { type: 'text', placeholder: 'Search', className: 'search' }),
+        _react2.default.createElement('input', { type: 'text', placeholder: 'Search', className: 'search', onChange: this.handleChange.bind(this) }),
         _react2.default.createElement(
           'select',
           { className: 'service-switch' },
@@ -25713,7 +25735,22 @@ var Search = function (_Component) {
   return Search;
 }(_react.Component);
 
-exports.default = Search;
+String.prototype.fuzzy = function (s) {
+  var hay = this.toLowerCase(),
+      i = 0,
+      n = -1,
+      l = void 0;
+  s = s.toLowerCase();
+  for (; l = s[i++];) {
+    if (!~(n = hay.indexOf(l, n + 1))) return false;
+  }return true;
+};
+
+function mapStateToProps(state) {
+  return state;
+}
+
+exports.default = (0, _reactRedux.connect)(mapStateToProps)(Search);
 
 /***/ }),
 /* 240 */
@@ -25804,6 +25841,113 @@ exports.push([module.i, "* {\n  box-sizing: border-box; }\n", ""]);
 
 // exports
 
+
+/***/ }),
+/* 244 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var setSearchInput = exports.setSearchInput = function setSearchInput(payload) {
+  return {
+    type: 'SET_SEARCH_INPUT',
+    payload: payload
+  };
+};
+
+var setResults = exports.setResults = function setResults(payload) {
+  return {
+    type: 'SET_RESULTS',
+    payload: payload
+  };
+};
+
+/***/ }),
+/* 245 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var search = function search() {
+  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+  var action = arguments[1];
+
+  switch (action.type) {
+    case 'SET_SEARCH_INPUT':
+      return Object.assign({}, state, { input: action.payload });
+    case 'SET_RESULTS':
+      return Object.assign({}, state, { results: action.payload });
+  }
+  return state;
+};
+
+exports.default = search;
+
+/***/ }),
+/* 246 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var setTicket = exports.setTicket = function setTicket(payload) {
+  return {
+    type: 'SET_TICKET',
+    payload: payload
+  };
+};
+
+var setUser = exports.setUser = function setUser(payload) {
+  return {
+    type: 'SET_USER',
+    payload: payload
+  };
+};
+
+var setUserFields = exports.setUserFields = function setUserFields(payload) {
+  return {
+    type: 'SET_USER_FIELDS',
+    payload: payload
+  };
+};
+
+/***/ }),
+/* 247 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var fields = function fields() {
+  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+  var action = arguments[1];
+
+  switch (action.type) {
+    case 'SET_TICKET':
+      return Object.assign({}, state, { ticket: action.payload });
+    case 'SET_USER':
+      return Object.assign({}, state, { user: action.payload });
+    case 'SET_USER_FIELDS':
+      return Object.assign({}, state, { userFields: action.payload });
+  }
+  return state;
+};
+
+exports.default = fields;
 
 /***/ })
 /******/ ]);

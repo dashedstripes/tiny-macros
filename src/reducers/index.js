@@ -1,8 +1,10 @@
 import { combineReducers } from 'redux'
-import todos from './todos'
+import search from './search'
+import fields from './fields'
 
 const rootReducer = combineReducers({
-  todos
+  search,
+  fields
 })
 
 export default rootReducer

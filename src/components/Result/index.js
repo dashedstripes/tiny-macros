@@ -15,8 +15,8 @@ class Result extends Component {
         <div className="result-container">
           <div className="result">
             <div className="icon"></div>
-            <h4 className="type">ADDRESS</h4>
-            <p className="content">123 Eastbourne Terrace</p>
+            <h4 className="type">{ this.props.type.toUpperCase().substring(0, 10) }</h4>
+            <p className="content">{ this.props.content }</p>
             <button className="edit"></button>
             <button className="star"></button>
           </div>
@@ -27,8 +27,8 @@ class Result extends Component {
         <div className="result-container">
           <div className="result result-edit-open">
             <div className="icon"></div>
-            <h4 className="type">ADDRESS</h4>
-            <p className="content">123 Eastbourne Terrace</p>
+            <h4 className="type">{ this.props.type }</h4>
+            <p className="content">{ this.props.content }</p>
             <button className="edit"></button>
             <button className="star"></button>
           </div>
