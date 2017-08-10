@@ -12,11 +12,13 @@ class Search extends Component {
 
     for(let key in this.props.fields.userFields) {
       if(key.fuzzy(this.props.search.input)) {
-        results.push({
-          type: 'USER_FIELD',
-          key: key,
-          value: this.props.fields.userFields[key]
-        })
+        if(this.props.fields.userFields[key] != null && typeof this.props.fields.userFields[key] != 'object' && this.props.fields.userFields[key] != '' && typeof this.props.fields.userFields[key] != 'boolean') {
+          results.push({
+            type: 'USER_FIELD',
+            key: key,
+            value: this.props.fields.userFields[key]
+          })
+        }
       }
     }
 
