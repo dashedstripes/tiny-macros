@@ -44,6 +44,12 @@
     transform: translateY(25%);
   }
 
+  .type {
+    max-width: 120px;
+    text-transform: uppercase;
+    text-overflow: ellipsis;
+  }
+
   .edit, .star {
     top: 50%;
     transform: translateY(10%);

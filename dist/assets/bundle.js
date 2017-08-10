@@ -25343,20 +25343,29 @@ var Results = function (_Component) {
     key: 'render',
     value: function render() {
       if (this.props.search.results !== undefined) {
-        return _react2.default.createElement(
-          'div',
-          { className: 'results' },
-          this.props.search.results.map(function (result) {
-            return _react2.default.createElement(_Result2.default, { type: result.key, content: result.value });
-          })
-        );
+        if (this.props.search.results.length != 0) {
+          return _react2.default.createElement(
+            'div',
+            { className: 'results' },
+            this.props.search.results.map(function (result, index) {
+              return _react2.default.createElement(_Result2.default, { key: index, type: result.key, content: result.value });
+            })
+          );
+        } else {
+          return this.noResults();
+        }
       } else {
-        return _react2.default.createElement(
-          'div',
-          { className: 'results' },
-          'No results found.'
-        );
+        return this.noResults();
       }
+    }
+  }, {
+    key: 'noResults',
+    value: function noResults() {
+      return _react2.default.createElement(
+        'div',
+        { className: 'results' },
+        'No results found.'
+      );
     }
   }]);
 
@@ -25424,7 +25433,7 @@ var Result = function (_Component) {
             _react2.default.createElement(
               'h4',
               { className: 'type' },
-              this.props.type.toUpperCase().substring(0, 10)
+              this.props.type
             ),
             _react2.default.createElement(
               'p',
@@ -25507,7 +25516,7 @@ exports = module.exports = __webpack_require__(33)(undefined);
 
 
 // module
-exports.push([module.i, ".result-container {\n  margin-bottom: 5px; }\n  .result-container:last-of-type {\n    margin-bottom: 0px; }\n\n.result {\n  display: flex;\n  flex-direction: row;\n  justify-content: space-between;\n  width: 100%;\n  padding: 10px;\n  color: #03363D;\n  background: #FFFFFF;\n  transition: 0.25s;\n  border-radius: 3px;\n  cursor: pointer; }\n  .result:hover {\n    color: #ffffff;\n    background: #03363D; }\n  .result:hover .icon {\n    background-color: #ffffff; }\n  .result .icon {\n    width: 35px;\n    height: 35px;\n    background-color: #03363D;\n    -webkit-mask-image: url(\"/icons/user.svg\");\n    mask-image: url(\"/icons/user.svg\"); }\n  .result .type, .result .content, .result .edit, .result .star {\n    display: inline-block; }\n  .result .type, .result .content {\n    top: 50%;\n    transform: translateY(25%); }\n  .result .edit, .result .star {\n    top: 50%;\n    transform: translateY(10%); }\n  .result .content {\n    width: 100px;\n    white-space: nowrap;\n    overflow: hidden;\n    text-overflow: ellipsis; }\n  .result .edit, .result .star {\n    width: 30px;\n    height: 30px;\n    background: none;\n    border: 0;\n    background-color: #819A9E;\n    transition: 0.5s; }\n    .result .edit:hover, .result .star:hover {\n      background-color: #FFFFFF; }\n  .result .star:hover {\n    background-color: #EFC93D; }\n  .result .edit {\n    -webkit-mask-image: url(\"/icons/edit.svg\");\n    mask-image: url(\"/icons/edit.svg\"); }\n  .result .star {\n    -webkit-mask-image: url(\"/icons/star.svg\");\n    mask-image: url(\"/icons/star.svg\"); }\n\n.result-edit {\n  width: 100%;\n  border: 0px;\n  margin-top: 5px;\n  margin-bottom: 40px;\n  padding: 10px;\n  border-radius: 3px; }\n", ""]);
+exports.push([module.i, ".result-container {\n  margin-bottom: 5px; }\n  .result-container:last-of-type {\n    margin-bottom: 0px; }\n\n.result {\n  display: flex;\n  flex-direction: row;\n  justify-content: space-between;\n  width: 100%;\n  padding: 10px;\n  color: #03363D;\n  background: #FFFFFF;\n  transition: 0.25s;\n  border-radius: 3px;\n  cursor: pointer; }\n  .result:hover {\n    color: #ffffff;\n    background: #03363D; }\n  .result:hover .icon {\n    background-color: #ffffff; }\n  .result .icon {\n    width: 35px;\n    height: 35px;\n    background-color: #03363D;\n    -webkit-mask-image: url(\"/icons/user.svg\");\n    mask-image: url(\"/icons/user.svg\"); }\n  .result .type, .result .content, .result .edit, .result .star {\n    display: inline-block; }\n  .result .type, .result .content {\n    top: 50%;\n    transform: translateY(25%); }\n  .result .type {\n    max-width: 120px;\n    text-transform: uppercase;\n    text-overflow: ellipsis; }\n  .result .edit, .result .star {\n    top: 50%;\n    transform: translateY(10%); }\n  .result .content {\n    width: 100px;\n    white-space: nowrap;\n    overflow: hidden;\n    text-overflow: ellipsis; }\n  .result .edit, .result .star {\n    width: 30px;\n    height: 30px;\n    background: none;\n    border: 0;\n    background-color: #819A9E;\n    transition: 0.5s; }\n    .result .edit:hover, .result .star:hover {\n      background-color: #FFFFFF; }\n  .result .star:hover {\n    background-color: #EFC93D; }\n  .result .edit {\n    -webkit-mask-image: url(\"/icons/edit.svg\");\n    mask-image: url(\"/icons/edit.svg\"); }\n  .result .star {\n    -webkit-mask-image: url(\"/icons/star.svg\");\n    mask-image: url(\"/icons/star.svg\"); }\n\n.result-edit {\n  width: 100%;\n  border: 0px;\n  margin-top: 5px;\n  margin-bottom: 40px;\n  padding: 10px;\n  border-radius: 3px; }\n", ""]);
 
 // exports
 

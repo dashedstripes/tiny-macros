@@ -9,13 +9,14 @@ class Result extends Component {
       isEditOpen: false
     }
   }
+
   render() {
     if(!this.state.isEditOpen) {
       return (
         <div className="result-container">
           <div className="result">
             <div className="icon"></div>
-            <h4 className="type">{ this.props.type.toUpperCase().substring(0, 10) }</h4>
+            <h4 className="type">{ this.props.type }</h4>
             <p className="content">{ this.props.content }</p>
             <button className="edit"></button>
             <button className="star"></button>

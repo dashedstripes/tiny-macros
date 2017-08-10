@@ -7,22 +7,30 @@ class Results extends Component {
 
   render() {
     if(this.props.search.results !== undefined) {
-      return (
-        <div className="results">
-          { this.props.search.results.map((result) => {
-            return (
-              <Result type={ result.key } content={ result.value }/>
-            )
-          })}
-        </div>
-      )
+      if(this.props.search.results.length != 0) {
+        return (
+          <div className="results">
+            { this.props.search.results.map((result, index) => {
+              return (
+                <Result key={index} type={ result.key } content={ result.value }/>
+              )
+            })}
+          </div>
+        )
+      }else {
+        return this.noResults()
+      }
     }else {
-      return (
-        <div className="results">
-          No results found.
-        </div>
-      )
+      return this.noResults()
     }
+  }
+
+  noResults() {
+    return (
+      <div className="results">
+        No results found.
+      </div>
+    )
   }
 }
 
